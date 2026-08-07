@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AuditCategoryController;
 use App\Http\Controllers\AuditQuestionController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StockCategoryController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -19,6 +20,18 @@ Route::prefix('audit/categories')->group(function () {
 
     Route::post('/{id}/update', [AuditCategoryController::class, 'update']);
     Route::post('/{id}/delete', [AuditCategoryController::class, 'destroy']);
+});
+
+// Stock Category & Item Api
+Route::prefix('stock')->group(function () {
+    Route::get('/categories', [StockCategoryController::class, 'index']);
+    Route::post('/categories', [StockCategoryController::class, 'storeCategory']);
+    Route::put('/categories/{id?}', [StockCategoryController::class, 'updateCategory']);
+    Route::delete('/categories/{id?}', [StockCategoryController::class, 'destroyCategory']);
+
+    Route::post('/items', [StockCategoryController::class, 'storeItem']);
+    Route::delete('/items/{id?}', [StockCategoryController::class, 'destroyItem']);
+    Route::post('/items/reorder', [StockCategoryController::class, 'reorderItems']);
 });
 
 //Audir Question Api

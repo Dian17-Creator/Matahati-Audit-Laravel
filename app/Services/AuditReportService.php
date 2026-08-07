@@ -297,7 +297,7 @@ class AuditReportService
             }
 
             // Hapus directory audit jika kosong
-            $auditDir = public_path('uploads/' . $audit->cdocid);
+            $auditDir = public_path('auditmh/' . $audit->cdocid);
             if (File::isDirectory($auditDir)) {
                 $files = File::files($auditDir);
                 if (count($files) === 0) {

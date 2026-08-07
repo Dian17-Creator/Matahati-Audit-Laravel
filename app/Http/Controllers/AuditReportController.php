@@ -155,13 +155,13 @@ class AuditReportController extends Controller
             $extension = 'jpg'; // We can enforce jpg or use client extension
             $filename = $cdocid . '_verification.' . $extension;
 
-            $uploadDir = public_path('auditmh/' . $cdocid);
+            $uploadDir = public_path('uploads/' . $cdocid);
             if (!File::isDirectory($uploadDir)) {
                 File::makeDirectory($uploadDir, 0775, true, true);
             }
 
             $absolutePath = $uploadDir . '/' . $filename;
-            $relativePath = 'auditmh/' . $cdocid . '/' . $filename;
+            $relativePath = 'uploads/' . $cdocid . '/' . $filename;
 
             // Pindahkan file photo asli. (Jika perlu di resize, gunakan ImageUploadService)
             // Sistem lama menggunakan move_uploaded_file tanpa resize untuk verification.
@@ -209,14 +209,14 @@ class AuditReportController extends Controller
 
                 $nextSequence = MauditFoto::where('nid_resp', $responseId)->max('nsequence') + 1;
 
-                $uploadDir = public_path('auditmh/' . $audit->cdocid);
+                $uploadDir = public_path('uploads/' . $audit->cdocid);
                 if (!File::isDirectory($uploadDir)) {
                     File::makeDirectory($uploadDir, 0775, true, true);
                 }
 
                 $filename = $audit->cdocid . '_' . $question->nid_kat . '_' . $question->nid . '_' . $nextSequence . '.jpg';
                 $absolutePath = $uploadDir . '/' . $filename;
-                $relativePath = 'auditmh/' . $audit->cdocid . '/' . $filename;
+                $relativePath = 'uploads/' . $audit->cdocid . '/' . $filename;
 
                 // Menggunakan ImageUploadService (resize, fix exif, compress)
                 $this->imageService->optimizeAndSave(

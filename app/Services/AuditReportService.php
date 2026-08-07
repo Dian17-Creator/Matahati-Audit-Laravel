@@ -79,9 +79,17 @@ class AuditReportService
             $categoriesMap[$categoryId]['max_score'] += 2; // Each question max 2
 
             $photos = $response->photos->map(function ($photo) {
+
+                $path = $photo->cphoto_path;
+
+                // Support data lama yang belum ada prefix uploads/
+                if (!str_starts_with($path, 'uploads/')) {
+                    $path = 'uploads/' . ltrim($path, '/');
+                }
+
                 return [
                     'id' => $photo->nid,
-                    'photo_path' => request()->getSchemeAndHttpHost() . '/' . ltrim($photo->cphoto_path, '/'),
+                    'photo_path' => asset($path),
                     'remark' => $photo->cket,
                     'action' => $photo->caction,
                 ];
@@ -118,7 +126,20 @@ class AuditReportService
                 'total_score' => (float) $audit->ntotnilai,
                 'max_score' => (float) $audit->nnilaimax,
                 'percentage' => (float) $audit->npersen,
-                'verification_photo' => $audit->cphoto_path ? request()->getSchemeAndHttpHost() . '/' . ltrim($audit->cphoto_path, '/') : null,
+                'verification_photo' => (function () use ($audit) {
+
+                    if (!$audit->cphoto_path) {
+                        return null;
+                    }
+
+                    $path = $audit->cphoto_path;
+
+                    if (!str_starts_with($path, 'uploads/')) {
+                        $path = 'uploads/' . ltrim($path, '/');
+                    }
+
+                    return asset($path);
+                })(),
                 'auditee_name' => $audit->cauditee,
                 'submitted_at' => $audit->submitted_at ? $audit->submitted_at->format('Y-m-d H:i:s') : null,
             ],

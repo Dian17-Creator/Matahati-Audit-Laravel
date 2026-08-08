@@ -137,7 +137,7 @@ class StockDepartmentController extends Controller
         $validator = Validator::make($request->all(), [
             'department_id' => 'required|integer|exists:mdepartment,nid',
 
-            'item_ids' => 'required|array',
+            'item_ids' => 'nullable|array',
 
             'item_ids.*' => [
                 'integer',
@@ -158,7 +158,7 @@ class StockDepartmentController extends Controller
         /*
          * Hilangkan duplicate item ID.
          */
-        $itemIds = collect($request->item_ids)
+        $itemIds = collect($request->input('item_ids', []))
             ->map(fn($id) => (int) $id)
             ->unique()
             ->values()

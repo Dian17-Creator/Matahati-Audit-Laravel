@@ -21,6 +21,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Auth;
 
 class AuditReportController extends Controller
 {
@@ -100,8 +101,7 @@ class AuditReportController extends Controller
     public function store(AuditCreateRequest $request)
     {
         try {
-            // Priority: Request parameter > Auth ID > Default 1
-            $auditorId = $request->auditor_id ?? (auth()->id() ?? 1);
+            $auditorId = $request->auditor_id ?? (Auth::id() ?? 1);
 
             $audit = $this->auditService->startAudit($request->department_id, $auditorId);
 

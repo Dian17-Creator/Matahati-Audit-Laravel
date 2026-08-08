@@ -53,10 +53,15 @@ Route::prefix('audits')->group(function () {
 
 // Stock Category & Item Api
 Route::prefix('stock')->group(function () {
+
+    // Category
     Route::get('/categories', [StockCategoryController::class, 'index']);
     Route::post('/categories', [StockCategoryController::class, 'storeCategory']);
     Route::put('/categories/{id?}', [StockCategoryController::class, 'updateCategory']);
     Route::delete('/categories/{id?}', [StockCategoryController::class, 'destroyCategory']);
+
+    // Items
+    Route::get('/categories/{categoryId}/items', [StockCategoryController::class, 'getItems']);
     Route::post('/items', [StockCategoryController::class, 'storeItem']);
     Route::delete('/items/{id?}', [StockCategoryController::class, 'destroyItem']);
     Route::post('/items/reorder', [StockCategoryController::class, 'reorderItems']);

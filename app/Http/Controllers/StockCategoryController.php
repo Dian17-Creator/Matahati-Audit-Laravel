@@ -21,23 +21,23 @@ class StockCategoryController extends Controller
             $categories = MauditItemgrp::with(['items' => function ($query) {
                 $query->orderBy('nsequence');
             }])
-            ->orderBy('nid')
-            ->get()
-            ->map(function ($cat) {
-                return [
-                    'id' => $cat->nid,
-                    'name' => $cat->cnama,
-                    'description' => $cat->cket,
-                    'items' => $cat->items->map(function ($item) {
-                        return [
-                            'id' => $item->nid,
-                            'category_id' => $item->nid_grp,
-                            'name' => $item->citemname,
-                            'sequence' => $item->nsequence,
-                        ];
-                    }),
-                ];
-            });
+                ->orderBy('nid')
+                ->get()
+                ->map(function ($cat) {
+                    return [
+                        'id' => $cat->nid,
+                        'name' => $cat->cnama,
+                        'description' => $cat->cket,
+                        'items' => $cat->items->map(function ($item) {
+                            return [
+                                'id' => $item->nid,
+                                'category_id' => $item->nid_grp,
+                                'name' => $item->citemname,
+                                'sequence' => $item->nsequence,
+                            ];
+                        }),
+                    ];
+                });
 
             return response()->json([
                 'success' => true,
@@ -189,6 +189,59 @@ class StockCategoryController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menghapus kategori.',
+            ], 500);
+        }
+    }
+
+    /**
+     * GET /api/stock/categories/{categoryId}/items
+     * Mengambil semua barang berdasarkan kategori
+     */
+    public function getItems($categoryId)
+    {
+        try {
+            $category = MauditItemgrp::find($categoryId);
+
+            if (!$category) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kategori tidak ditemukan.',
+                ], 404);
+            }
+
+            $items = MauditItem::where('nid_grp', $categoryId)
+                ->orderBy('nsequence')
+                ->orderBy('nid')
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'id' => $item->nid,
+                        'category_id' => $item->nid_grp,
+                        'name' => $item->citemname,
+                        'sequence' => $item->nsequence,
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data barang berhasil diambil.',
+                'data' => [
+                    'category' => [
+                        'id' => $category->nid,
+                        'name' => $category->cnama,
+                        'description' => $category->cket,
+                    ],
+                    'items' => $items,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            Log::error(
+                'Gagal mengambil barang berdasarkan kategori: ' . $e->getMessage()
+            );
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data barang.',
             ], 500);
         }
     }

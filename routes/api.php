@@ -6,6 +6,7 @@ use App\Http\Controllers\AuditCategoryController;
 use App\Http\Controllers\AuditQuestionController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\StockCategoryController;
+use App\Http\Controllers\StockDepartmentController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -20,18 +21,6 @@ Route::prefix('audit/categories')->group(function () {
 
     Route::post('/{id}/update', [AuditCategoryController::class, 'update']);
     Route::post('/{id}/delete', [AuditCategoryController::class, 'destroy']);
-});
-
-// Stock Category & Item Api
-Route::prefix('stock')->group(function () {
-    Route::get('/categories', [StockCategoryController::class, 'index']);
-    Route::post('/categories', [StockCategoryController::class, 'storeCategory']);
-    Route::put('/categories/{id?}', [StockCategoryController::class, 'updateCategory']);
-    Route::delete('/categories/{id?}', [StockCategoryController::class, 'destroyCategory']);
-
-    Route::post('/items', [StockCategoryController::class, 'storeItem']);
-    Route::delete('/items/{id?}', [StockCategoryController::class, 'destroyItem']);
-    Route::post('/items/reorder', [StockCategoryController::class, 'reorderItems']);
 });
 
 //Audir Question Api
@@ -58,4 +47,24 @@ Route::prefix('audits')->group(function () {
     Route::post('/delete-photo', [\App\Http\Controllers\AuditReportController::class, 'deletePhoto']);
     Route::post('/submit', [\App\Http\Controllers\AuditReportController::class, 'submit']);
     Route::post('/delete', [\App\Http\Controllers\AuditReportController::class, 'destroy']);
+});
+
+//API STOCK OPNAME
+
+// Stock Category & Item Api
+Route::prefix('stock')->group(function () {
+    Route::get('/categories', [StockCategoryController::class, 'index']);
+    Route::post('/categories', [StockCategoryController::class, 'storeCategory']);
+    Route::put('/categories/{id?}', [StockCategoryController::class, 'updateCategory']);
+    Route::delete('/categories/{id?}', [StockCategoryController::class, 'destroyCategory']);
+    Route::post('/items', [StockCategoryController::class, 'storeItem']);
+    Route::delete('/items/{id?}', [StockCategoryController::class, 'destroyItem']);
+    Route::post('/items/reorder', [StockCategoryController::class, 'reorderItems']);
+});
+
+// STOCK DEPARTMENT
+Route::prefix('stock/departments')->group(function () {
+    Route::get('/', [StockDepartmentController::class, 'index']);
+    Route::get('/{id}/mapping', [StockDepartmentController::class, 'mapping']);
+    Route::post('/mapping', [StockDepartmentController::class, 'storeMapping']);
 });

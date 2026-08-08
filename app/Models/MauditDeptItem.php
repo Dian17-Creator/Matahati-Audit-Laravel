@@ -27,9 +27,6 @@ class MauditDeptItem extends Model
         'nid_item' => 'integer',
     ];
 
-    /**
-     * Departemen
-     */
     public function department()
     {
         return $this->belongsTo(
@@ -39,9 +36,6 @@ class MauditDeptItem extends Model
         );
     }
 
-    /**
-     * Barang
-     */
     public function item()
     {
         return $this->belongsTo(

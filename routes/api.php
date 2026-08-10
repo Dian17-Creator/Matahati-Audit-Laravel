@@ -73,3 +73,14 @@ Route::prefix('stock/departments')->group(function () {
     Route::get('/{id}/mapping', [StockDepartmentController::class, 'mapping']);
     Route::post('/mapping', [StockDepartmentController::class, 'storeMapping']);
 });
+
+// STOCK REPORTS / EXECUTION
+Route::prefix('stock/opname')->group(function () {
+    Route::post('/create', [\App\Http\Controllers\StockReportController::class, 'store']);
+    Route::get('/detail/{id}', [\App\Http\Controllers\StockReportController::class, 'show']);
+    Route::post('/update', [\App\Http\Controllers\StockReportController::class, 'updateAnswers']);
+    Route::post('/upload-photo', [\App\Http\Controllers\StockReportController::class, 'uploadPhoto']);
+    Route::post('/update-photo', [\App\Http\Controllers\StockReportController::class, 'updatePhoto']);
+    Route::post('/delete-photo', [\App\Http\Controllers\StockReportController::class, 'deletePhoto']);
+    Route::post('/submit', [\App\Http\Controllers\StockReportController::class, 'submit']);
+});

@@ -29,6 +29,196 @@ class StockReportController extends Controller
     }
 
     /**
+     * Tampilkan list / histori stok opname
+     */
+    public function index(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'nullable|integer|exists:mdepartment,nid',
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+            'page' => 'nullable|integer|min:1',
+        ]);
+
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized.'
+                ], 401);
+            }
+
+            $query = MauditInventory::with([
+                'department',
+                'auditor'
+            ])
+                // Histori hanya milik auditor yang sedang login
+                ->where('nid_auditor', $user->nid)
+
+                // Terbaru di atas
+                ->orderBy('started_at', 'desc');
+
+            /**
+             * Filter departemen
+             */
+            if ($request->filled('department_id')) {
+                $query->where('nid_dept', $request->department_id);
+            }
+
+            /**
+             * Filter tanggal mulai
+             */
+            if ($request->filled('date_from')) {
+                $query->whereDate('daudit', '>=', $request->date_from);
+            }
+
+            /**
+             * Filter tanggal akhir
+             */
+            if ($request->filled('date_to')) {
+                $query->whereDate('daudit', '<=', $request->date_to);
+            }
+
+            /**
+             * Jika page dikirim:
+             * gunakan pagination 15 data per halaman.
+             *
+             * Jika page tidak dikirim:
+             * ambil maksimal 1000 data seperti pola Audit History.
+             */
+            if ($request->filled('page')) {
+                $histories = $query->paginate(15);
+
+                $items = $histories->getCollection()->map(function ($audit) {
+                    return [
+                        'id' => $audit->nid,
+                        'document_id' => $audit->cdocid,
+
+                        'department_id' => $audit->nid_dept,
+                        'department_name' => $audit->department
+                            ? $audit->department->cname
+                            : null,
+
+                        'auditor_id' => $audit->nid_auditor,
+                        'auditor_name' => $audit->auditor
+                            ? $audit->auditor->cfullname
+                            : null,
+
+                        'audit_date' => $audit->daudit
+                            ? $audit->daudit->format('Y-m-d')
+                            : null,
+
+                        'status' => $audit->cstatus,
+
+                        'auditee_name' => $audit->cauditre,
+
+                        'started_at' => $audit->started_at
+                            ? $audit->started_at->format('Y-m-d H:i:s')
+                            : null,
+
+                        'updated_at' => $audit->updated_at
+                            ? $audit->updated_at->format('Y-m-d H:i:s')
+                            : null,
+
+                        'submitted_at' => $audit->submitted_at
+                            ? $audit->submitted_at->format('Y-m-d H:i:s')
+                            : null,
+                    ];
+                });
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Data histori stok opname berhasil diambil.',
+                    'data' => [
+                        'items' => $items->values(),
+                        'pagination' => [
+                            'current_page' => $histories->currentPage(),
+                            'last_page' => $histories->lastPage(),
+                            'per_page' => $histories->perPage(),
+                            'total' => $histories->total(),
+                            'from' => $histories->firstItem(),
+                            'to' => $histories->lastItem(),
+                        ]
+                    ]
+                ]);
+            }
+
+            /**
+             * Tanpa pagination:
+             * maksimal 1000 data.
+             */
+            $histories = $query
+                ->limit(1000)
+                ->get();
+
+            $items = $histories->map(function ($audit) {
+                return [
+                    'id' => $audit->nid,
+                    'document_id' => $audit->cdocid,
+
+                    'department_id' => $audit->nid_dept,
+                    'department_name' => $audit->department
+                        ? $audit->department->cname
+                        : null,
+
+                    'auditor_id' => $audit->nid_auditor,
+                    'auditor_name' => $audit->auditor
+                        ? $audit->auditor->cfullname
+                        : null,
+
+                    'audit_date' => $audit->daudit
+                        ? $audit->daudit->format('Y-m-d')
+                        : null,
+
+                    'status' => $audit->cstatus,
+
+                    'auditee_name' => $audit->cauditre,
+
+                    'started_at' => $audit->started_at
+                        ? $audit->started_at->format('Y-m-d H:i:s')
+                        : null,
+
+                    'updated_at' => $audit->updated_at
+                        ? $audit->updated_at->format('Y-m-d H:i:s')
+                        : null,
+
+                    'submitted_at' => $audit->submitted_at
+                        ? $audit->submitted_at->format('Y-m-d H:i:s')
+                        : null,
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data histori stok opname berhasil diambil.',
+                'data' => [
+                    'items' => $items->values(),
+                    'pagination' => [
+                        'current_page' => 1,
+                        'last_page' => 1,
+                        'per_page' => $items->count(),
+                        'total' => $items->count(),
+                        'from' => $items->isNotEmpty() ? 1 : null,
+                        'to' => $items->isNotEmpty() ? $items->count() : null,
+                    ]
+                ]
+            ]);
+        } catch (Exception $e) {
+            Log::error('Gagal mengambil histori stok opname', [
+                'user_id' => Auth::id(),
+                'message' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data histori stok opname.'
+            ], 500);
+        }
+    }
+
+    /**
      * Start / Get Active Stock Opname
      */
     public function store(Request $request)
@@ -178,7 +368,7 @@ class StockReportController extends Controller
                     ];
                 }
 
-                $itemPhotos = isset($photos[$response->nid]) ? $photos[$response->nid]->map(function($photo) {
+                $itemPhotos = isset($photos[$response->nid]) ? $photos[$response->nid]->map(function ($photo) {
                     $path = $photo->cphoto_path;
                     if (!str_starts_with($path, 'uploads/')) {
                         $path = 'uploads/' . ltrim($path, '/');
@@ -217,7 +407,7 @@ class StockReportController extends Controller
             });
 
             foreach ($categoriesMap as &$cat) {
-                usort($cat['items'], function($a, $b) {
+                usort($cat['items'], function ($a, $b) {
                     return $a['sequence'] <=> $b['sequence'];
                 });
             }
@@ -343,7 +533,7 @@ class StockReportController extends Controller
                 if (!$user) throw new Exception("Unauthorized.", 401);
 
                 $responseInfo = MauditInvresp::findOrFail($request->response_id);
-                
+
                 // Ownership check via query on audit
                 $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
                     ->where('nid_auditor', $user->nid)
@@ -368,10 +558,10 @@ class StockReportController extends Controller
 
                 $item = MauditItem::findOrFail($responseInfo->nid_item);
                 $groupId = $item->nid_grp;
-                
+
                 $extension = 'jpg';
                 $filename = $audit->cdocid . '_' . $groupId . '_' . $item->nid . '_' . $nextSequence . '.' . $extension;
-                
+
                 $absolutePath = $uploadDir . '/' . $filename;
                 $relativePath = $audit->cdocid . '/' . $filename;
 
@@ -431,7 +621,7 @@ class StockReportController extends Controller
 
             $photo = MauditInvFoto::findOrFail($request->photo_id);
             $responseInfo = MauditInvresp::findOrFail($photo->nid_resp);
-            
+
             // Ownership check via query
             $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
                 ->where('nid_auditor', $user->nid)
@@ -480,7 +670,7 @@ class StockReportController extends Controller
 
                 $photo = MauditInvFoto::findOrFail($request->photo_id);
                 $responseInfo = MauditInvresp::findOrFail($photo->nid_resp);
-                
+
                 // Ownership check via query
                 $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
                     ->where('nid_auditor', $user->nid)
@@ -495,7 +685,7 @@ class StockReportController extends Controller
                     $path = 'uploads/' . ltrim($path, '/');
                 }
                 $absolutePath = public_path($path);
-                
+
                 if (File::exists($absolutePath)) {
                     File::delete($absolutePath);
                 }
@@ -552,9 +742,9 @@ class StockReportController extends Controller
 
                 // Check all items have qty_stock and qty_real
                 $missingItems = MauditInvresp::where('nid_audit', $audit->nid)
-                    ->where(function($query) {
+                    ->where(function ($query) {
                         $query->whereNull('nqty_stock')
-                              ->orWhereNull('nqty_real');
+                            ->orWhereNull('nqty_real');
                     })->pluck('nid_item');
 
                 if ($missingItems->isNotEmpty()) {
@@ -573,7 +763,7 @@ class StockReportController extends Controller
                 $photo = $request->file('verification_photo');
                 $extension = $photo->getClientOriginalExtension() ?: 'jpg';
                 $filename = $audit->cdocid . '_verification.' . $extension;
-                
+
                 $uploadDir = public_path('uploads/' . $audit->cdocid);
                 if (!File::isDirectory($uploadDir)) {
                     File::makeDirectory($uploadDir, 0775, true, true);
@@ -584,14 +774,14 @@ class StockReportController extends Controller
 
                 // Calculate diffs
                 $responses = MauditInvresp::where('nid_audit', $audit->nid)->get();
-                
+
                 foreach ($responses as $resp) {
                     $stock = (float) $resp->nqty_stock;
                     $real = (float) $resp->nqty_real;
-                    
+
                     $diff = round($real - $stock, 6);
                     if (abs($diff) < 0.000001) $diff = 0;
-                    
+
                     $diffUnder = 0;
                     $diffOver = 0;
 

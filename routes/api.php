@@ -76,6 +76,7 @@ Route::prefix('stock/departments')->group(function () {
 
 // STOCK REPORTS / EXECUTION
 Route::prefix('stock/opname')->group(function () {
+    Route::get('/', [\App\Http\Controllers\StockReportController::class, 'index']);
     Route::post('/create', [\App\Http\Controllers\StockReportController::class, 'store']);
     Route::get('/detail/{id}', [\App\Http\Controllers\StockReportController::class, 'show']);
     Route::post('/update', [\App\Http\Controllers\StockReportController::class, 'updateAnswers']);

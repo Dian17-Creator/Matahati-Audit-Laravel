@@ -53,6 +53,23 @@ class DashboardController extends Controller
             ];
         });
 
+        $recentStockOpnames = MauditInventory::with('department')
+            ->orderBy('started_at', 'desc')
+            ->take(5)
+            ->get();
+
+        $recentStockActivity = $recentStockOpnames->map(function ($opname) {
+            return [
+                'id' => $opname->nid,
+                'title' => 'Stok Opname ' . ($opname->department->cname ?? 'Departemen'),
+                'subtitle' => $opname->cdocid . ' • ' .
+                    ($opname->daudit
+                        ? $opname->daudit->format('d M Y')
+                        : '-'),
+                'status' => $opname->cstatus,
+            ];
+        });
+
         // =========================
         // RESPONSE
         // =========================
@@ -72,6 +89,7 @@ class DashboardController extends Controller
 
                 // Activity
                 'recent_activity' => $recentActivity,
+                'recent_stock_opname' => $recentStockActivity,
             ],
         ]);
     }

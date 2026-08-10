@@ -30,7 +30,7 @@ class MauditDeptItem extends Model
     public function department()
     {
         return $this->belongsTo(
-            Mdepartment::class,
+            mdepartment::class,
             'nid_dept',
             'nid'
         );

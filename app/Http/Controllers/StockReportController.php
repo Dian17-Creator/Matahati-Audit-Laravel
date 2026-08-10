@@ -42,22 +42,17 @@ class StockReportController extends Controller
         try {
             $auditorId = $request->input('auditor_id');
 
-            if (!$auditorId) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Auditor ID is required.'
-                ], 400);
-            }
-
             $query = MauditInventory::with([
                 'department',
                 'auditor'
             ])
-                // Histori hanya milik auditor yang diminta
-                ->where('nid_auditor', $auditorId)
-
                 // Terbaru di atas
                 ->orderBy('started_at', 'desc');
+
+            // Filter by auditor jika dikirim
+            if ($auditorId) {
+                $query->where('nid_auditor', $auditorId);
+            }
 
             /**
              * Filter departemen
@@ -228,10 +223,8 @@ class StockReportController extends Controller
 
         try {
             return DB::transaction(function () use ($request) {
-                $auditorId = $request->input('auditor_id');
-                if (!$auditorId) {
-                    throw new Exception("Auditor ID is required.", 400);
-                }
+                // Gunakan auditor_id dari request, atau default ke 1 seperti di AuditReportController
+                $auditorId = $request->input('auditor_id', 1);
 
                 $departmentId = $request->department_id;
 
@@ -325,18 +318,12 @@ class StockReportController extends Controller
     /**
      * Load Detail Stock Opname
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
         try {
-            $auditorId = $request->input('auditor_id');
-            if (!$auditorId) {
-                return response()->json(['success' => false, 'message' => 'Auditor ID is required.'], 400);
-            }
-
-            // Ownership check via query
+            // Get audit document
             $audit = MauditInventory::with(['department', 'auditor'])
                 ->where('nid', $id)
-                ->where('nid_auditor', $auditorId)
                 ->firstOrFail();
 
             // Get responses with items and their photos
@@ -459,12 +446,8 @@ class StockReportController extends Controller
         ]);
 
         try {
-            $auditorId = $request->input('auditor_id');
-            if (!$auditorId) throw new Exception("Auditor ID is required.", 400);
-
-            // Ownership check via query
+            // Get audit document
             $audit = MauditInventory::where('nid', $request->audit_id)
-                ->where('nid_auditor', $auditorId)
                 ->firstOrFail();
 
             if ($audit->cstatus === 'Submitted') {
@@ -527,14 +510,10 @@ class StockReportController extends Controller
 
         try {
             return DB::transaction(function () use ($request) {
-                $auditorId = $request->input('auditor_id');
-                if (!$auditorId) throw new Exception("Auditor ID is required.", 400);
-
                 $responseInfo = MauditInvresp::findOrFail($request->response_id);
 
-                // Ownership check via query on audit
+                // Get audit document
                 $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
-                    ->where('nid_auditor', $auditorId)
                     ->firstOrFail();
 
                 if ($audit->cstatus === 'Submitted') {
@@ -614,15 +593,11 @@ class StockReportController extends Controller
         ]);
 
         try {
-            $auditorId = $request->input('auditor_id');
-            if (!$auditorId) throw new Exception("Auditor ID is required.", 400);
-
             $photo = MauditInvFoto::findOrFail($request->photo_id);
             $responseInfo = MauditInvresp::findOrFail($photo->nid_resp);
 
-            // Ownership check via query
+            // Get audit document
             $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
-                ->where('nid_auditor', $auditorId)
                 ->firstOrFail();
 
             if ($audit->cstatus === 'Submitted') {
@@ -663,15 +638,11 @@ class StockReportController extends Controller
 
         try {
             return DB::transaction(function () use ($request) {
-                $auditorId = $request->input('auditor_id');
-                if (!$auditorId) throw new Exception("Auditor ID is required.", 400);
-
                 $photo = MauditInvFoto::findOrFail($request->photo_id);
                 $responseInfo = MauditInvresp::findOrFail($photo->nid_resp);
 
-                // Ownership check via query
+                // Get audit document
                 $audit = MauditInventory::where('nid', $responseInfo->nid_audit)
-                    ->where('nid_auditor', $auditorId)
                     ->firstOrFail();
 
                 if ($audit->cstatus === 'Submitted') {
@@ -723,14 +694,8 @@ class StockReportController extends Controller
 
         try {
             return DB::transaction(function () use ($request) {
-                $auditorId = $request->input('auditor_id');
-                if (!$auditorId) {
-                    throw new HttpResponseException(response()->json(['success' => false, 'message' => 'Auditor ID is required.'], 400));
-                }
-
-                // Ownership check via query + lockForUpdate
+                // Get audit document + lockForUpdate
                 $audit = MauditInventory::where('nid', $request->audit_id)
-                    ->where('nid_auditor', $auditorId)
                     ->lockForUpdate()
                     ->firstOrFail();
 

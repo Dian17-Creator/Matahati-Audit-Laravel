@@ -24,7 +24,7 @@ class MauditInventory extends Model
         'updated_at',
         'submitted_at',
         'daudit',
-        'cauditre',
+        'cauditee',
         'cphoto_path',
     ];
 

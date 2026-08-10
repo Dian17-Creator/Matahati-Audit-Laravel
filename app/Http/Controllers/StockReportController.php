@@ -106,7 +106,7 @@ class StockReportController extends Controller
 
                         'status' => $audit->cstatus,
 
-                        'auditee_name' => $audit->cauditre,
+                        'auditee_name' => $audit->cauditee,
 
                         'started_at' => $audit->started_at
                             ? $audit->started_at->format('Y-m-d H:i:s')
@@ -168,7 +168,7 @@ class StockReportController extends Controller
 
                     'status' => $audit->cstatus,
 
-                    'auditee_name' => $audit->cauditre,
+                    'auditee_name' => $audit->cauditee,
 
                     'started_at' => $audit->started_at
                         ? $audit->started_at->format('Y-m-d H:i:s')
@@ -410,7 +410,7 @@ class StockReportController extends Controller
                         'auditor_name' => $audit->auditor ? $audit->auditor->cfullname : null,
                         'status' => $audit->cstatus,
                         'audit_date' => $audit->daudit ? $audit->daudit->format('Y-m-d') : null,
-                        'auditee_name' => $audit->cauditre,
+                        'auditee_name' => $audit->cauditee,
                         'verification_photo' => $audit->cphoto_path ? asset((!str_starts_with($audit->cphoto_path, 'uploads/') ? 'uploads/' : '') . $audit->cphoto_path) : null,
                         'started_at' => $audit->started_at ? $audit->started_at->format('Y-m-d H:i:s') : null,
                         'updated_at' => $audit->updated_at ? $audit->updated_at->format('Y-m-d H:i:s') : null,
@@ -762,9 +762,9 @@ class StockReportController extends Controller
                     ]);
                 }
 
-                // Update audit using cauditre based on database schema
+                // Update audit using cauditee based on database schema
                 $audit->update([
-                    'cauditre' => trim($request->auditee_name),
+                    'cauditee' => trim($request->auditee_name),
                     'cphoto_path' => $relativePath,
                     'cstatus' => 'Submitted',
                     'submitted_at' => Carbon::now(),
@@ -775,7 +775,7 @@ class StockReportController extends Controller
                     'success' => true,
                     'message' => 'Stok opname selesai.',
                     'data' => [
-                        'auditee_name' => $audit->cauditre,
+                        'auditee_name' => $audit->cauditee,
                         'verification_photo' => asset('uploads/' . $relativePath)
                     ]
                 ]);

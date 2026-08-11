@@ -164,8 +164,8 @@ break 2;
         }
 
         .category-row-header td {
-            padding: 6pt 9pt;
-            font-size: 11pt;
+            padding: 4pt 6pt;
+            font-size: 10.5pt;
             font-weight: bold;
         }
 
@@ -175,8 +175,8 @@ break 2;
         }
 
         .question-row td {
-            padding: 6pt 8pt;
-            vertical-align: top;
+            padding: 3pt 5pt;
+            vertical-align: middle;
             border-left: 1pt solid #ddd;
         }
 
@@ -397,7 +397,7 @@ break 2;
         @foreach($category['items'] as $qIndex => $item)
         <tr class="question-row">
             <td class="question-text-cell">
-                <div style="font-weight: bold; margin-bottom: 4pt;">{{ $qIndex + 1 }}. {{ $item['name'] }}</div>
+                <div style="font-weight: bold; margin-bottom: 1pt; font-size: 8.5pt;">{{ $qIndex + 1 }}. {{ $item['name'] }}</div>
                 @if(!empty($item['response']['remark']))
                 <div class="remark-box">
                     <div class="remark-label">Catatan / Temuan</div>
@@ -406,10 +406,10 @@ break 2;
                 @endif
             </td>
             <td class="score-cell">
-                <div style="margin-bottom: 2pt;">
+                <div style="margin-bottom: 1pt;">
                     <span class="qty-label">Sys:</span> <span class="qty-val">{{ $item['response']['qty_stock'] ?? '-' }}</span>
                 </div>
-                <div style="margin-bottom: 4pt;">
+                <div>
                     <span class="qty-label">Real:</span> <span class="qty-val">{{ $item['response']['qty_real'] ?? '-' }}</span>
                 </div>
             </td>

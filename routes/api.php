@@ -79,6 +79,7 @@ Route::prefix('stock/opname')->group(function () {
     Route::get('/', [\App\Http\Controllers\StockReportController::class, 'index']);
     Route::post('/create', [\App\Http\Controllers\StockReportController::class, 'store']);
     Route::get('/detail/{id}', [\App\Http\Controllers\StockReportController::class, 'show']);
+    Route::get('/{id}/export-pdf', [\App\Http\Controllers\StockReportController::class, 'exportPdf']);
     Route::post('/update', [\App\Http\Controllers\StockReportController::class, 'updateAnswers']);
     Route::post('/upload-photo', [\App\Http\Controllers\StockReportController::class, 'uploadPhoto']);
     Route::post('/update-photo', [\App\Http\Controllers\StockReportController::class, 'updatePhoto']);

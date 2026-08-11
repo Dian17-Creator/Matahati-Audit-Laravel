@@ -31,11 +31,13 @@ class StockReportController extends Controller
         ]);
 
         try {
+            $auditorId = $request->input('auditor_id') ?? $request->input('nid_auditor');
+
             $data = $this->stockService->getList(
                 $request->input('department_id'),
                 $request->input('date_from'),
                 $request->input('date_to'),
-                $request->input('auditor_id'),
+                $auditorId,
                 $request->input('page')
             );
 
@@ -67,14 +69,23 @@ class StockReportController extends Controller
         ]);
 
         try {
-            $auditorId = $request->input('auditor_id', 1);
+            // Cek auditor_id atau nid_auditor dari request
+            $auditorId = $request->input('auditor_id') ?? $request->input('nid_auditor');
+
+            if (!$auditorId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'ID Auditor (auditor_id atau nid_auditor) diperlukan.'
+                ], 400);
+            }
+
             $departmentId = $request->department_id;
 
             $data = $this->stockService->startStockOpname($departmentId, $auditorId);
 
             $message = $data['is_existing'] ? 'Existing audit found.' : 'Dokumen stok opname berhasil dibuat.';
             $status = $data['is_existing'] ? 200 : 201;
-            
+
             unset($data['is_existing']);
 
             return response()->json([
@@ -125,10 +136,10 @@ class StockReportController extends Controller
     {
         try {
             $data = $this->stockService->getDetail($id);
-            
+
             // Render view khusus stok opname, pastikan file 'resources/views/stock/pdf-report.blade.php' sudah disiapkan
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('stock.pdf-report', $data);
-            
+
             return $pdf->download('stok_opname_' . $data['header']['document_id'] . '.pdf');
         } catch (Exception $e) {
             return response("Gagal me-render laporan: " . $e->getMessage(), 500);

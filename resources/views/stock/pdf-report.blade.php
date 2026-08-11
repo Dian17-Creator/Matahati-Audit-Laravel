@@ -206,7 +206,7 @@ break 2;
             color: #777;
             text-transform: uppercase;
             display: inline-block;
-            width: 25pt;
+            width: 28pt;
             text-align: left;
         }
 
@@ -409,8 +409,20 @@ break 2;
                 <div style="margin-bottom: 1pt;">
                     <span class="qty-label">Sys:</span> <span class="qty-val">{{ $item['response']['qty_stock'] ?? '-' }}</span>
                 </div>
-                <div>
+                <div style="margin-bottom: 2pt;">
                     <span class="qty-label">Real:</span> <span class="qty-val">{{ $item['response']['qty_real'] ?? '-' }}</span>
+                </div>
+                @php
+                    $diffText = '-';
+                    $diffColor = '#6b7280';
+                    if (isset($item['response']['qty_stock']) && isset($item['response']['qty_real'])) {
+                        $diff = $item['response']['qty_real'] - $item['response']['qty_stock'];
+                        $diffText = ($diff > 0) ? '+'.$diff : $diff;
+                        $diffColor = ($diff == 0) ? '#16a34a' : '#dc2626';
+                    }
+                @endphp
+                <div style="border-top: 1pt solid #eee; padding-top: 2pt; margin-top: 1pt;">
+                    <span class="qty-label">Diff:</span> <span class="qty-val" style="color: {{ $diffColor }};">{{ $diffText }}</span>
                 </div>
             </td>
         </tr>

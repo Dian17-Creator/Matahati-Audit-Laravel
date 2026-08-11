@@ -412,17 +412,6 @@ break 2;
                 <div style="margin-bottom: 4pt;">
                     <span class="qty-label">Real:</span> <span class="qty-val">{{ $item['response']['qty_real'] ?? '-' }}</span>
                 </div>
-                <!-- @php
-                    $diff = $item['response']['diff'];
-                    $diffText = ($diff > 0) ? '+'.$diff : $diff;
-                    $diffBg = ($diff == 0) ? 'bg-green' : 'bg-red';
-                    
-                    if ($item['response']['qty_stock'] === null || $item['response']['qty_real'] === null) {
-                        $diffText = '-';
-                        $diffBg = 'bg-gray';
-                    }
-                @endphp -->
-                <div class="score-pill {{ $diffBg }}">{{ $diffText }}</div>
             </td>
         </tr>
         @endforeach
@@ -485,34 +474,35 @@ break 2;
                     @endphp
 
                     @if(!empty($gallery))
-                        @foreach($gallery as $p)
-                        <div style="margin-bottom: 4pt;">
-                            <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border: 1.5pt solid #ddd; border-radius: 6pt;">
-                        </div>
-                        @endforeach
+                    @foreach($gallery as $p)
+                    <div style="margin-bottom: 4pt;">
+                        <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border: 1.5pt solid #ddd; border-radius: 6pt;">
+                    </div>
+                    @endforeach
                     @endif
 
                     @if(!empty($annotated))
-                        @foreach($annotated as $p)
-                        <div style="margin-bottom: 6pt; border: 1pt solid #eee; border-radius: 6pt; background-color: #f9f9f9; padding: 4pt;">
-                            <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border-radius: 4pt; margin-bottom: 4pt;">
-                            @if($p['remark'])
-                            <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Temuan / Observasi:</div>
-                            <div style="font-size: 8pt; margin-bottom: 4pt; word-wrap: break-word; line-height: 1.2;">{{ $p['remark'] }}</div>
-                            @endif
-                            @if($p['action'])
-                            <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Rekomendasi Tindakan:</div>
-                            <div style="font-size: 8pt; word-wrap: break-word; line-height: 1.2;">{{ $p['action'] }}</div>
-                            @endif
-                        </div>
-                        @endforeach
+                    @foreach($annotated as $p)
+                    <div style="margin-bottom: 6pt; border: 1pt solid #eee; border-radius: 6pt; background-color: #f9f9f9; padding: 4pt;">
+                        <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border-radius: 4pt; margin-bottom: 4pt;">
+                        @if($p['remark'])
+                        <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Temuan / Observasi:</div>
+                        <div style="font-size: 8pt; margin-bottom: 4pt; word-wrap: break-word; line-height: 1.2;">{{ $p['remark'] }}</div>
+                        @endif
+                        @if($p['action'])
+                        <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Rekomendasi Tindakan:</div>
+                        <div style="font-size: 8pt; word-wrap: break-word; line-height: 1.2;">{{ $p['action'] }}</div>
+                        @endif
+                    </div>
+                    @endforeach
                     @endif
                 </div>
             </td>
             @endforeach
             @for($i = count($rowQuestions); $i < 3; $i++)
-            <td style="width: 33.33%; padding: 4pt;"></td>
-            @endfor
+                <td style="width: 33.33%; padding: 4pt;">
+                </td>
+                @endfor
         </tr>
         @endforeach
     </table>

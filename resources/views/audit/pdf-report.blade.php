@@ -192,6 +192,7 @@ break 2;
         .score-cell {
             width: 15%;
             text-align: center;
+            vertical-align: middle !important;
         }
 
         .score-pill {

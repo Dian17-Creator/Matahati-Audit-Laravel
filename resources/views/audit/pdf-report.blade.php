@@ -63,13 +63,13 @@ break 2;
          */
         @page {
             size: A4;
-            margin: 1.2cm;
+            margin: 0.9cm;
         }
 
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10pt;
-            line-height: 1.4;
+            font-size: 9.5pt;
+            line-height: 1.25;
             color: #333;
             margin: 0;
             padding: 0;
@@ -77,11 +77,11 @@ break 2;
 
         .header-table {
             width: 100%;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .header-title {
-            font-size: 22pt;
+            font-size: 20pt;
             font-weight: bold;
             color: #333;
         }
@@ -89,18 +89,18 @@ break 2;
         .status-badge {
             display: inline-block;
             border: 2pt solid #B63352;
-            padding: 6pt 15pt;
+            padding: 5pt 12pt;
             border-radius: 6pt;
             font-weight: bold;
             color: #B63352;
             text-transform: uppercase;
-            font-size: 10pt;
+            font-size: 9pt;
         }
 
         .summary-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 25px;
+            margin-bottom: 12pt;
             border: 1.5pt solid #e0e0e0;
             border-left: 4pt solid #B63352;
         }
@@ -113,7 +113,7 @@ break 2;
             border: none;
             border-bottom: 1pt solid #ececec;
             border-right: 1pt solid #ececec;
-            padding: 9pt 12pt;
+            padding: 6pt 8pt;
             vertical-align: middle;
         }
 
@@ -136,28 +136,28 @@ break 2;
         }
 
         .score-large {
-            font-size: 14pt;
+            font-size: 12pt;
             color: #B63352;
         }
 
         hr {
             border: 0;
             border-top: 1.5pt solid #B63352;
-            margin: 25pt 0;
+            margin: 15pt 0;
         }
 
         h2 {
-            font-size: 16pt;
+            font-size: 14pt;
             color: #333;
-            margin-bottom: 15pt;
-            padding-bottom: 6pt;
+            margin-bottom: 8pt;
+            padding-bottom: 4pt;
         }
 
         /* MODERN ASSESSMENT TABLE */
         .category-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20pt;
+            margin-bottom: 10pt;
             page-break-inside: auto;
             border: 1pt solid #ddd;
         }
@@ -165,20 +165,22 @@ break 2;
         .category-row-header {
             background-color: #B63352;
             color: white;
+            page-break-after: avoid;
         }
 
         .category-row-header td {
-            padding: 10pt 12pt;
-            font-size: 12pt;
+            padding: 6pt 9pt;
+            font-size: 11pt;
             font-weight: bold;
         }
 
         .question-row {
             border-bottom: 1pt solid #ddd;
+            page-break-inside: avoid;
         }
 
         .question-row td {
-            padding: 12pt;
+            padding: 6pt 8pt;
             vertical-align: top;
             border-left: 1pt solid #ddd;
         }
@@ -194,32 +196,33 @@ break 2;
 
         .score-pill {
             display: block;
-            padding: 4pt 0;
-            border-radius: 5pt;
+            padding: 3pt 0;
+            border-radius: 4pt;
             color: white;
             font-weight: bold;
-            font-size: 10pt;
-            width: 40pt;
+            font-size: 9pt;
+            width: 35pt;
             margin: 0 auto;
         }
 
         .remark-box {
-            margin-top: 8pt;
-            padding: 8pt 12pt;
+            margin-top: 4pt;
+            padding: 5pt 8pt;
             background-color: #fdfdfd;
             border: 1pt solid #eee;
             border-left: 4pt solid #B63352;
-            font-size: 9.5pt;
+            font-size: 8.5pt;
+            line-height: 1.2;
             color: #555;
             border-radius: 4pt;
         }
 
         .remark-label {
-            font-size: 8pt;
+            font-size: 7.5pt;
             font-weight: bold;
             color: #999;
             text-transform: uppercase;
-            margin-bottom: 3pt;
+            margin-bottom: 2pt;
         }
 
         /* SCORE COLORS */
@@ -250,22 +253,23 @@ break 2;
         /* ENHANCED SIGNATURE SECTION */
         .signature-table {
             width: 100%;
-            margin-top: 50pt;
+            margin-top: 20pt;
             border-collapse: collapse;
+            page-break-inside: avoid;
         }
 
         .signature-table td {
             width: 33.33%;
             text-align: center;
             vertical-align: top;
-            padding: 15pt;
+            padding: 8pt;
         }
 
         .signature-label {
-            font-size: 10pt;
+            font-size: 9pt;
             font-weight: bold;
             color: #333;
-            margin-bottom: 12pt;
+            margin-bottom: 8pt;
             text-transform: uppercase;
             letter-spacing: 1pt;
         }
@@ -273,16 +277,16 @@ break 2;
         .signature-img-container {
             border: 1.5pt solid #eee;
             background-color: #fcfcfc;
-            margin: 12pt 0;
-            border-radius: 8pt;
+            margin: 8pt 0;
+            border-radius: 6pt;
             text-align: center;
-            padding: 8pt;
-            min-height: 40pt;
+            padding: 4pt;
+            min-height: 20pt;
         }
 
         .signature-img {
             max-width: 100%;
-            max-height: 180pt;
+            max-height: 100pt;
             width: auto;
             height: auto;
             display: block;
@@ -292,8 +296,8 @@ break 2;
 
         .signature-name {
             font-weight: bold;
-            font-size: 13pt;
-            margin-top: 15pt;
+            font-size: 11pt;
+            margin-top: 10pt;
             color: #B63352;
         }
 
@@ -304,12 +308,12 @@ break 2;
 
         .photo-grid-td {
             width: 25%;
-            padding: 6pt;
+            padding: 3pt;
         }
 
         .photo-img {
             width: 100%;
-            height: 140pt;
+            height: 105pt;
             object-fit: cover;
             border: 1.5pt solid #ddd;
             border-radius: 6pt;
@@ -317,19 +321,19 @@ break 2;
 
         .annotated-table {
             width: 100%;
-            margin-bottom: 20pt;
+            margin-bottom: 8pt;
             border: 1.5pt solid #eee;
-            border-radius: 8pt;
+            border-radius: 6pt;
             background-color: #f9f9f9;
         }
 
         .annotated-img-td {
-            width: 150pt;
-            padding: 10pt;
+            width: 100pt;
+            padding: 6pt;
         }
 
         .annotated-content-td {
-            padding: 15pt;
+            padding: 8pt;
             vertical-align: top;
         }
 
@@ -388,9 +392,6 @@ break 2;
     <h2>Hasil Penilaian</h2>
 
     @foreach($categories as $index => $category)
-    @if($index > 0)
-    <div style="page-break-before: always;"></div>
-    @endif
     <table class="category-table">
         <tr class="category-row-header">
             <td colspan="2">
@@ -434,12 +435,11 @@ break 2;
     @endforeach
 
     <!-- SIGNATURE AREA -->
-    <div style="page-break-before: always;"></div>
     <table class="signature-table">
         <tr>
             <td>
                 <div class="signature-label">Auditor</div>
-                <div style="margin: 20pt 0 8pt 0; min-height: 60pt;"></div>
+                <div style="margin: 10pt 0 4pt 0; min-height: 40pt;"></div>
                 <div class="signature-name">{{ $audit['auditor_name'] }}</div>
             </td>
             <td>
@@ -454,7 +454,7 @@ break 2;
             </td>
             <td>
                 <div class="signature-label">Auditee / PIC</div>
-                <div style="margin: 20pt 0 8pt 0; min-height: 60pt;"></div>
+                <div style="margin: 10pt 0 4pt 0; min-height: 40pt;"></div>
                 <div class="signature-name">{{ $audit['auditee_name'] ?? '-' }}</div>
             </td>
         </tr>
@@ -470,13 +470,13 @@ break 2;
     @endphp
 
     @if(!empty($photoQuestions))
-    <div style="background-color: #f1f1f1; padding: 10pt; margin-top: 20pt; border-left: 5pt solid #B63352; font-weight: bold;">
+    <div style="background-color: #f1f1f1; padding: 6pt 8pt; margin-top: 8pt; margin-bottom: 6pt; border-left: 5pt solid #B63352; font-weight: bold; font-size: 10pt;">
         {{ $category['name'] }}
     </div>
 
     @foreach($photoQuestions as $q)
-    <div style="margin-top: 15pt; margin-bottom: 25pt;">
-        <div style="font-size: 11pt; font-weight: bold; margin-bottom: 10pt; color: #444;">
+    <div style="margin-top: 8pt; margin-bottom: 10pt;">
+        <div style="font-size: 9.5pt; font-weight: bold; margin-bottom: 5pt; color: #444;">
             {{ $q['question'] }} <span style="font-weight: normal; color: #888;">({{ count($q['photos']) }} foto)</span>
         </div>
 
@@ -508,7 +508,7 @@ break 2;
         <table class="annotated-table">
             <tr>
                 <td class="annotated-img-td">
-                    <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 130pt; height: 130pt; object-fit: cover; border-radius: 4pt;">
+                    <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100pt; height: 100pt; object-fit: cover; border-radius: 4pt;">
                 </td>
                 <td class="annotated-content-td">
                     @if($p['remark'])

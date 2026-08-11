@@ -33,6 +33,12 @@ class StockReportController extends Controller
         try {
             $auditorId = $request->input('auditor_id') ?? $request->input('nid_auditor');
 
+            if ($auditorId === null) {
+                Log::warning('StockReportController@index: auditor_id tidak ditemukan di request.', [
+                    'all_input' => $request->all()
+                ]);
+            }
+
             $data = $this->stockService->getList(
                 $request->input('department_id'),
                 $request->input('date_from'),
@@ -72,10 +78,17 @@ class StockReportController extends Controller
             // Cek auditor_id atau nid_auditor dari request
             $auditorId = $request->input('auditor_id') ?? $request->input('nid_auditor');
 
-            if (!$auditorId) {
+            if ($auditorId === null) {
+                $auditorId = \Illuminate\Support\Facades\Auth::id();
+            }
+
+            if ($auditorId === null) {
+                Log::error('StockReportController@store: auditor_id tidak ditemukan.', [
+                    'all_input' => $request->all()
+                ]);
                 return response()->json([
                     'success' => false,
-                    'message' => 'ID Auditor (auditor_id atau nid_auditor) diperlukan.'
+                    'message' => 'Sesi auditor tidak valid atau ID Auditor tidak terkirim.'
                 ], 400);
             }
 

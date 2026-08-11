@@ -119,6 +119,23 @@ class StockReportController extends Controller
     }
 
     /**
+     * Export stock opname report to printable HTML/PDF
+     */
+    public function exportPdf(int $id)
+    {
+        try {
+            $data = $this->stockService->getDetail($id);
+            
+            // Render view khusus stok opname, pastikan file 'resources/views/stock/pdf-report.blade.php' sudah disiapkan
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('stock.pdf-report', $data);
+            
+            return $pdf->download('stok_opname_' . $data['header']['document_id'] . '.pdf');
+        } catch (Exception $e) {
+            return response("Gagal me-render laporan: " . $e->getMessage(), 500);
+        }
+    }
+
+    /**
      * Autosave Stock Item
      */
     public function updateAnswers(Request $request)

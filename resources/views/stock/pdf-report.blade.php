@@ -1,53 +1,53 @@
 @php
 function fmtStatus($status) {
-    return match ($status) {
-        "Draft" => "Draft",
-        "Submitted" => "Selesai",
-        default => "Dalam Proses",
-    };
+return match ($status) {
+"Draft" => "Draft",
+"Submitted" => "Selesai",
+default => "Dalam Proses",
+};
 }
 
 /**
 * Helper to convert images to Base64 for guaranteed visibility in DomPDF
 */
 function getBase64Image($url) {
-    if (empty($url)) return null;
+if (empty($url)) return null;
 
-    try {
-        // Find relative path by stripping host info
-        $cleanUrl = explode('?', $url)[0];
-        $hosts = [request()->getSchemeAndHttpHost(), url('/'), 'http://localhost'];
+try {
+// Find relative path by stripping host info
+$cleanUrl = explode('?', $url)[0];
+$hosts = [request()->getSchemeAndHttpHost(), url('/'), 'http://localhost'];
 
-        $relativePath = $cleanUrl;
-        foreach ($hosts as $host) {
-            if (str_contains($cleanUrl, $host)) {
-                $relativePath = str_replace($host, '', $cleanUrl);
-                break;
-            }
-        }
+$relativePath = $cleanUrl;
+foreach ($hosts as $host) {
+if (str_contains($cleanUrl, $host)) {
+$relativePath = str_replace($host, '', $cleanUrl);
+break;
+}
+}
 
-        $path = public_path(ltrim($relativePath, '/'));
+$path = public_path(ltrim($relativePath, '/'));
 
-        if (file_exists($path)) {
-            $type = pathinfo($path, PATHINFO_EXTENSION);
-            $data = file_get_contents($path);
-            return 'data:image/' . $type . ';base64,' . base64_encode($data);
-        }
-    } catch (\Exception $e) {
-        // Fallback to original URL if anything fails
-    }
+if (file_exists($path)) {
+$type = pathinfo($path, PATHINFO_EXTENSION);
+$data = file_get_contents($path);
+return 'data:image/' . $type . ';base64,' . base64_encode($data);
+}
+} catch (\Exception $e) {
+// Fallback to original URL if anything fails
+}
 
-    return $url;
+return $url;
 }
 
 $hasPhotos = false;
 foreach ($categories as $category) {
-    foreach ($category['items'] as $item) {
-        if (!empty($item['photos'])) {
-            $hasPhotos = true;
-            break 2;
-        }
-    }
+foreach ($category['items'] as $item) {
+if (!empty($item['photos'])) {
+$hasPhotos = true;
+break 2;
+}
+}
 }
 @endphp
 <!doctype html>
@@ -243,9 +243,11 @@ foreach ($categories as $category) {
         .bg-red {
             background-color: #dc2626;
         }
+
         .bg-green {
             background-color: #16a34a;
         }
+
         .bg-gray {
             background-color: #6b7280;
         }
@@ -410,7 +412,7 @@ foreach ($categories as $category) {
                 <div style="margin-bottom: 4pt;">
                     <span class="qty-label">Real:</span> <span class="qty-val">{{ $item['response']['qty_real'] ?? '-' }}</span>
                 </div>
-                @php
+                <!-- @php
                     $diff = $item['response']['diff'];
                     $diffText = ($diff > 0) ? '+'.$diff : $diff;
                     $diffBg = ($diff == 0) ? 'bg-green' : 'bg-red';
@@ -419,7 +421,7 @@ foreach ($categories as $category) {
                         $diffText = '-';
                         $diffBg = 'bg-gray';
                     }
-                @endphp
+                @endphp -->
                 <div class="score-pill {{ $diffBg }}">{{ $diffText }}</div>
             </td>
         </tr>
@@ -467,58 +469,53 @@ foreach ($categories as $category) {
         {{ $category['name'] }}
     </div>
 
-    @foreach($photoQuestions as $q)
-    <div style="margin-top: 8pt; margin-bottom: 10pt;">
-        <div style="font-size: 9.5pt; font-weight: bold; margin-bottom: 5pt; color: #444;">
-            {{ $q['name'] }} <span style="font-weight: normal; color: #888;">({{ count($q['photos']) }} foto)</span>
-        </div>
+    <table style="width: 100%; border-collapse: collapse; table-layout: fixed;">
+        @foreach(array_chunk($photoQuestions, 3) as $rowQuestions)
+        <tr>
+            @foreach($rowQuestions as $q)
+            <td style="width: 33.33%; padding: 4pt; vertical-align: top;">
+                <div style="margin-bottom: 8pt;">
+                    <div style="font-size: 9pt; font-weight: bold; margin-bottom: 5pt; color: #444; word-wrap: break-word; line-height: 1.2;">
+                        {{ $q['name'] }} <span style="font-weight: normal; color: #888;">({{ count($q['photos']) }} foto)</span>
+                    </div>
 
-        @php
-        $gallery = array_filter($q['photos'], fn($p) => empty($p['remark']) && empty($p['action']));
-        $annotated = array_filter($q['photos'], fn($p) => !empty($p['remark']) || !empty($p['action']));
-        @endphp
+                    @php
+                    $gallery = array_filter($q['photos'], fn($p) => empty($p['remark']) && empty($p['action']));
+                    $annotated = array_filter($q['photos'], fn($p) => !empty($p['remark']) || !empty($p['action']));
+                    @endphp
 
-        @if(!empty($gallery))
-        <table class="photo-grid-table">
-            @foreach(array_chunk($gallery, 4) as $row)
-            <tr>
-                @foreach($row as $p)
-                <td class="photo-grid-td">
-                    <img src="{{ getBase64Image($p['photo_path']) }}" class="photo-img">
-                </td>
-                @endforeach
-                @for($i = count($row); $i < 4; $i++)
-                    <td class="photo-grid-td">
-                    </td>
-                    @endfor
-            </tr>
+                    @if(!empty($gallery))
+                        @foreach($gallery as $p)
+                        <div style="margin-bottom: 4pt;">
+                            <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border: 1.5pt solid #ddd; border-radius: 6pt;">
+                        </div>
+                        @endforeach
+                    @endif
+
+                    @if(!empty($annotated))
+                        @foreach($annotated as $p)
+                        <div style="margin-bottom: 6pt; border: 1pt solid #eee; border-radius: 6pt; background-color: #f9f9f9; padding: 4pt;">
+                            <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100%; height: 130pt; object-fit: cover; border-radius: 4pt; margin-bottom: 4pt;">
+                            @if($p['remark'])
+                            <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Temuan / Observasi:</div>
+                            <div style="font-size: 8pt; margin-bottom: 4pt; word-wrap: break-word; line-height: 1.2;">{{ $p['remark'] }}</div>
+                            @endif
+                            @if($p['action'])
+                            <div style="font-weight: bold; font-size: 7.5pt; color: #B63352; margin-bottom: 2pt; text-transform: uppercase;">Rekomendasi Tindakan:</div>
+                            <div style="font-size: 8pt; word-wrap: break-word; line-height: 1.2;">{{ $p['action'] }}</div>
+                            @endif
+                        </div>
+                        @endforeach
+                    @endif
+                </div>
+            </td>
             @endforeach
-        </table>
-        @endif
-
-        @if(!empty($annotated))
-        @foreach($annotated as $p)
-        <table class="annotated-table">
-            <tr>
-                <td class="annotated-img-td">
-                    <img src="{{ getBase64Image($p['photo_path']) }}" style="width: 100pt; height: 100pt; object-fit: cover; border-radius: 4pt;">
-                </td>
-                <td class="annotated-content-td">
-                    @if($p['remark'])
-                    <div class="note-label">Temuan / Observasi:</div>
-                    <div style="margin-bottom: 12pt; font-size: 10pt;">{{ $p['remark'] }}</div>
-                    @endif
-                    @if($p['action'])
-                    <div class="note-label">Rekomendasi Tindakan:</div>
-                    <div style="font-size: 10pt;">{{ $p['action'] }}</div>
-                    @endif
-                </td>
-            </tr>
-        </table>
+            @for($i = count($rowQuestions); $i < 3; $i++)
+            <td style="width: 33.33%; padding: 4pt;"></td>
+            @endfor
+        </tr>
         @endforeach
-        @endif
-    </div>
-    @endforeach
+    </table>
     @endif
     @endforeach
     @endif

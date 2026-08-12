@@ -450,7 +450,7 @@ foreach ($categories as $category) {
                             }
                         @endphp
                         <div style="border-top: 1px solid #eee; padding-top: 2px; margin-top: 2px;">
-                            <span style="font-size: 7pt; color: #777;">DIFF:</span> <span style="font-size: 8pt; font-weight: bold; color: {{ $diffColor }};">{{ $diffText }}</span>
+                            <span style="font-size: 7pt; color: #777;">DIFF:</span> <span {!! 'style="font-size: 8pt; font-weight: bold; color: ' . $diffColor . ';"' !!}>{{ $diffText }}</span>
                         </div>
                     </td>
                 </tr>

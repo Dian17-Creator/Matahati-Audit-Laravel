@@ -158,7 +158,7 @@ foreach ($categories as $category) {
         .stock-table td {
             border: 1px solid #ccc;
             padding: 4px 6px;
-            font-size: 8.5pt;
+            font-size: 7.5pt; /* INI FONT TABLE HASIL */
             vertical-align: top;
             line-height: 1.25;
         }
@@ -201,7 +201,7 @@ foreach ($categories as $category) {
         .stock-table .remark {
             margin: 1px 0 1px 5px;
             padding: 0px 4px;
-            font-size: 8.5pt;
+            font-size: 7.5pt; /* INI FONT TABLE HASIL */
             line-height: 1.25;
             border-left: 3px solid #bbb;
         }
@@ -240,7 +240,7 @@ foreach ($categories as $category) {
 
         .verification-photo {
             display: block;
-            width: 100%;
+            max-width: 100%;
             max-height: 135px;
             object-fit: contain;
             border: 1px solid #bbb;

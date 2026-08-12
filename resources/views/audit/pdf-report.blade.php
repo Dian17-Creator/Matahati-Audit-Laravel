@@ -110,9 +110,9 @@ break 2;
 
         .summary td {
             border: 1px solid #ddd;
-            font-size: 8pt;
+            font-size: 6pt;
             /* FONT SIZE: Teks pada Tabel Summary */
-            padding: 4px;
+            padding: 2px;
         }
 
         .summary td.label {
@@ -182,7 +182,7 @@ break 2;
             vertical-align: top;
             text-align: right;
             width: 40px;
-            font-size: 9pt;
+            font-size: 8pt;
             /* FONT SIZE: Angka Skor */
             font-weight: 700;
         }
@@ -190,8 +190,8 @@ break 2;
         .remark {
             margin-top: 2px;
             margin-left: 15px;
-            padding: 3px 4px;
-            font-size: 7.5pt;
+            padding: 2px 3px;
+            font-size: 6pt;
             /* FONT SIZE: Catatan / Temuan / Observasi */
             border-left: 3px solid #bbb;
         }

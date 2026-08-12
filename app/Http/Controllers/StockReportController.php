@@ -43,7 +43,7 @@ class StockReportController extends Controller
                 $request->input('department_id'),
                 $request->input('date_from'),
                 $request->input('date_to'),
-                $auditorId,
+                null, // Remove auditor filter to show all records for the department
                 $request->input('page')
             );
 

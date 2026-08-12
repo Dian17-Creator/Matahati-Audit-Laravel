@@ -40,6 +40,11 @@ function getBase64Image($url) {
     return $url;
 }
 
+// Sort categories alphabetically
+usort($categories, function($a, $b) {
+    return strcmp($a['name'], $b['name']);
+});
+
 $hasPhotos = false;
 foreach ($categories as $category) {
     foreach ($category['questions'] as $question) {
@@ -60,7 +65,21 @@ foreach ($categories as $category) {
         /* DOMPDF COMPATIBLE CSS - Match Native PHP Export */
         @page {
             size: A4;
-            margin: 12mm;
+            margin: 12mm 12mm 15mm 12mm;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: -5mm;
+            left: 0;
+            right: 0;
+            width: 100%;
+            font-size: 8pt;
+            color: #444;
+        }
+
+        .page-number:before {
+            content: counter(page) "/" counter(pages);
         }
 
         body {
@@ -227,8 +246,9 @@ foreach ($categories as $category) {
 
         .verification-photo {
             display: block;
-            width: 100%;
-            height: 135px;
+            max-width: 100%;
+            max-height: 150px;
+            height: auto;
             object-fit: contain;
             border: 1px solid #bbb;
             margin: 0 auto;
@@ -291,8 +311,9 @@ foreach ($categories as $category) {
         }
 
         .gallery-photo {
-            width: 99%;
-            height: 90mm;
+            max-width: 99%;
+            height: auto;
+            max-height: 250px;
             object-fit: contain;
             border: 1px solid #bbb;
             display: block;
@@ -332,8 +353,9 @@ foreach ($categories as $category) {
         }
 
         .annotated-photo {
-            width: 100%;
-            height: 85mm;
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
             object-fit: contain;
             border: 1px solid #ddd;
             display: block;
@@ -346,6 +368,19 @@ foreach ($categories as $category) {
 </head>
 
 <body class="report">
+
+    <div id="footer">
+        <table style="width: 100%; border-collapse: collapse; border: none;">
+            <tr>
+                <td style="text-align: left; border: none; padding: 0;">
+                    {{ request()->url() }}
+                </td>
+                <td style="text-align: right; border: none; padding: 0;">
+                    <span class="page-number"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
 
     <table class="header-table">
         <tr>

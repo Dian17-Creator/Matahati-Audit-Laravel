@@ -110,9 +110,9 @@ break 2;
 
         .summary td {
             border: 1px solid #ddd;
-            font-size: 6pt;
+            font-size: 8pt;
             /* FONT SIZE: Teks pada Tabel Summary */
-            padding: 2px;
+            padding: 3px;
         }
 
         .summary td.label {

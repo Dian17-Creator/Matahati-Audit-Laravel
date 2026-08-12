@@ -95,14 +95,14 @@ class AuditReportController extends Controller
 
             // Inject penomoran halaman menggunakan Canvas (Fix bug counter(pages) = 0)
             $canvas = $pdf->getDomPDF()->getCanvas();
-            $canvas->page_text(
-                530,    // Posisi X (Pojok kanan bawah)
-                815,    // Posisi Y (Bottom margin)
-                "{PAGE_NUM} / {PAGE_COUNT}",
-                null,   // Font default
-                8,      // Ukuran 8pt
-                [0.27, 0.27, 0.27] // Warna #444
-            );
+            // $canvas->page_text(
+            //     530,    // Posisi X (Pojok kanan bawah)
+            //     815,    // Posisi Y (Bottom margin)
+            //     "{PAGE_NUM} / {PAGE_COUNT}",
+            //     null,   // Font default
+            //     8,      // Ukuran 8pt
+            //     [0.27, 0.27, 0.27] // Warna #444
+            // );
 
             return $pdf->download('audit_' . $data['audit']['document_id'] . '.pdf');
         } catch (Exception $e) {

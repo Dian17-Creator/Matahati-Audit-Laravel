@@ -71,20 +71,19 @@ foreach ($categories as $category) {
         #footer {
             position: fixed;
             bottom: -5mm;
-            left: 0;
             right: 0;
-            width: 100%;
             font-size: 8pt;
             color: #444;
+            text-align: right;
         }
 
         .page-number:after {
-            content: counter(page) "/" counter(pages);
+            content: "Halaman " counter(page) " / " counter(pages);
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 9pt;
+            font-size: 8pt; /* FONT SIZE: Teks Umum / Body */
             line-height: 1.3;
             color: #222;
             margin: 0;
@@ -97,7 +96,7 @@ foreach ($categories as $category) {
         }
 
         .header-title {
-            font-size: 20px;
+            font-size: 18px; /* FONT SIZE: Judul Dokumen (Header) */
             font-weight: bold;
             margin: 0;
         }
@@ -107,7 +106,7 @@ foreach ($categories as $category) {
             border: 1px solid #999;
             padding: 5px 10px;
             border-radius: 4px;
-            font-size: 9pt;
+            font-size: 8pt; /* FONT SIZE: Badge Status */
             color: #222;
         }
 
@@ -120,7 +119,7 @@ foreach ($categories as $category) {
 
         .summary td {
             border: 1px solid #ddd;
-            font-size: 9pt;
+            font-size: 8pt; /* FONT SIZE: Teks pada Tabel Summary */
             padding: 4px;
         }
 
@@ -131,7 +130,7 @@ foreach ($categories as $category) {
         }
 
         .large-text {
-            font-size: 16px;
+            font-size: 14px; /* FONT SIZE: Nilai Total & Persentase (Besar) */
             font-weight: 800;
         }
 
@@ -145,7 +144,7 @@ foreach ($categories as $category) {
         h2 {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 14px;
+            font-size: 13px; /* FONT SIZE: Sub-judul H2 */
             page-break-after: avoid;
         }
 
@@ -155,7 +154,7 @@ foreach ($categories as $category) {
         }
 
         .category-title {
-            font-size: 12px;
+            font-size: 11px; /* FONT SIZE: Judul Kategori Hasil Audit */
             font-weight: bold;
             padding: 6px 6px;
             background: #f2f2f2;
@@ -188,7 +187,7 @@ foreach ($categories as $category) {
             vertical-align: top;
             text-align: right;
             width: 40px;
-            font-size: 10pt;
+            font-size: 9pt; /* FONT SIZE: Angka Skor */
             font-weight: 700;
         }
 
@@ -196,7 +195,7 @@ foreach ($categories as $category) {
             margin-top: 2px;
             margin-left: 15px;
             padding: 3px 4px;
-            font-size: 8.5pt;
+            font-size: 7.5pt; /* FONT SIZE: Catatan / Temuan / Observasi */
             border-left: 3px solid #bbb;
         }
 
@@ -233,13 +232,13 @@ foreach ($categories as $category) {
         .sig-title {
             font-weight: bold;
             margin-bottom: 8px;
-            font-size: 11px;
+            font-size: 10px; /* FONT SIZE: Label Tanda Tangan */
             color: #666;
             letter-spacing: .5px;
         }
 
         .sig-name {
-            font-size: 11px;
+            font-size: 10px; /* FONT SIZE: Nama Tanda Tangan */
             font-weight: bold;
             text-transform: uppercase;
         }
@@ -270,7 +269,7 @@ foreach ($categories as $category) {
         .photo-category {
             width: 99%;
             margin-bottom: 20px;
-            page-break-inside: avoid;
+            /* Layout diringkas dengan menghilangkan page-break-inside: avoid; */
         }
 
         .photo-question {
@@ -282,7 +281,7 @@ foreach ($categories as $category) {
         }
 
         .photo-question-title {
-            font-size: 11pt;
+            font-size: 10pt; /* FONT SIZE: Judul Pertanyaan di Foto */
             font-weight: 700;
             margin-bottom: 14px;
             padding-bottom: 6px;
@@ -290,7 +289,7 @@ foreach ($categories as $category) {
         }
 
         .photo-count {
-            font-size: 9pt;
+            font-size: 8pt; /* FONT SIZE: Jumlah Foto */
             font-weight: 400;
             color: #666;
         }
@@ -300,7 +299,7 @@ foreach ($categories as $category) {
             width: 100%;
             border-collapse: collapse;
             margin: 12px 0 18px;
-            page-break-inside: avoid;
+            /* Layout diringkas dengan menghilangkan page-break-inside: avoid; */
         }
 
         .photo-gallery-td {
@@ -325,7 +324,7 @@ foreach ($categories as $category) {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 18px;
-            page-break-inside: avoid;
+            /* Layout diringkas dengan menghilangkan page-break-inside: avoid; */
         }
 
         .annotated-td {
@@ -348,7 +347,7 @@ foreach ($categories as $category) {
         .annotated-notes-td {
             width: 55%;
             vertical-align: top;
-            font-size: 10pt;
+            font-size: 9pt; /* FONT SIZE: Catatan Rekomendasi di Foto */
             line-height: 1.35;
         }
 
@@ -370,16 +369,7 @@ foreach ($categories as $category) {
 <body class="report">
 
     <div id="footer">
-        <table style="width: 100%; border-collapse: collapse; border: none;">
-            <tr>
-                <td style="text-align: left; border: none; padding: 0;">
-                    {{ request()->url() }}
-                </td>
-                <td style="text-align: right; border: none; padding: 0;">
-                    <span class="page-number"></span>
-                </td>
-            </tr>
-        </table>
+        <span class="page-number"></span>
     </div>
 
     <table class="header-table">

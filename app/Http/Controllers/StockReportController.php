@@ -161,7 +161,7 @@ class StockReportController extends Controller
             $canvas->page_text(
                 530,    // Posisi X (Pojok kanan bawah)
                 815,    // Posisi Y (Bottom margin)
-                "Halaman {PAGE_NUM} / {PAGE_COUNT}",
+                "{PAGE_NUM} / {PAGE_COUNT}",
                 null,   // Font default
                 8,      // Ukuran 8pt
                 [0.27, 0.27, 0.27] // Warna #ffffffff

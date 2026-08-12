@@ -153,6 +153,20 @@ class StockReportController extends Controller
             // Render view khusus stok opname, pastikan file 'resources/views/stock/pdf-report.blade.php' sudah disiapkan
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('stock.pdf-report', $data);
 
+            // Render DOMPDF terlebih dahulu sebelum memanipulasi canvas
+            $pdf->render();
+
+            // Inject penomoran halaman menggunakan Canvas (Fix bug counter(pages) = 0)
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                530,    // Posisi X (Pojok kanan bawah)
+                815,    // Posisi Y (Bottom margin)
+                "Halaman {PAGE_NUM} / {PAGE_COUNT}",
+                null,   // Font default
+                8,      // Ukuran 8pt
+                [0.27, 0.27, 0.27] // Warna #ffffffff
+            );
+
             return $pdf->download('stok_opname_' . $data['header']['document_id'] . '.pdf');
         } catch (Exception $e) {
             return response("Gagal me-render laporan: " . $e->getMessage(), 500);

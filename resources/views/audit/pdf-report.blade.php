@@ -78,13 +78,13 @@ foreach ($categories as $category) {
             color: #444;
         }
 
-        .page-number:before {
+        .page-number:after {
             content: counter(page) "/" counter(pages);
         }
 
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 10pt;
+            font-size: 9pt;
             line-height: 1.3;
             color: #222;
             margin: 0;
@@ -97,7 +97,7 @@ foreach ($categories as $category) {
         }
 
         .header-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             margin: 0;
         }
@@ -107,7 +107,7 @@ foreach ($categories as $category) {
             border: 1px solid #999;
             padding: 5px 10px;
             border-radius: 4px;
-            font-size: 10pt;
+            font-size: 9pt;
             color: #222;
         }
 
@@ -120,7 +120,7 @@ foreach ($categories as $category) {
 
         .summary td {
             border: 1px solid #ddd;
-            font-size: 9.5pt;
+            font-size: 9pt;
             padding: 4px;
         }
 
@@ -131,7 +131,7 @@ foreach ($categories as $category) {
         }
 
         .large-text {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 800;
         }
 
@@ -145,7 +145,7 @@ foreach ($categories as $category) {
         h2 {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 18px;
+            font-size: 14px;
             page-break-after: avoid;
         }
 
@@ -155,7 +155,7 @@ foreach ($categories as $category) {
         }
 
         .category-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             padding: 6px 6px;
             background: #f2f2f2;
@@ -188,7 +188,7 @@ foreach ($categories as $category) {
             vertical-align: top;
             text-align: right;
             width: 40px;
-            font-size: 11pt;
+            font-size: 10pt;
             font-weight: 700;
         }
 
@@ -196,7 +196,7 @@ foreach ($categories as $category) {
             margin-top: 2px;
             margin-left: 15px;
             padding: 3px 4px;
-            font-size: 9.5pt;
+            font-size: 8.5pt;
             border-left: 3px solid #bbb;
         }
 
@@ -282,7 +282,7 @@ foreach ($categories as $category) {
         }
 
         .photo-question-title {
-            font-size: 12pt;
+            font-size: 11pt;
             font-weight: 700;
             margin-bottom: 14px;
             padding-bottom: 6px;
@@ -290,7 +290,7 @@ foreach ($categories as $category) {
         }
 
         .photo-count {
-            font-size: 10pt;
+            font-size: 9pt;
             font-weight: 400;
             color: #666;
         }

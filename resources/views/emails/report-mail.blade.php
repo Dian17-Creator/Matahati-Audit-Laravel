@@ -4,10 +4,12 @@
 <body style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
 
     @if(!empty($messageText))
-        <p>{!! nl2br(e($messageText)) !!}</p>
+    <p>{!! nl2br(e($messageText)) !!}</p>
     @endif
 
-    <p>Berikut terlampir {{ $reportName }}</p>
+    <p>Berikut terlampir,</p>
+
+    <p>{{ $reportName }}</p>
 
     <p>Terima kasih.</p>
 

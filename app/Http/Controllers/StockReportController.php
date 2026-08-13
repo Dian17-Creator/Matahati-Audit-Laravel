@@ -361,4 +361,60 @@ class StockReportController extends Controller
             ], $code);
         }
     }
+
+    /**
+     * Send email with PDF report
+     */
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'audit_id' => 'required|integer',
+            'recipient' => 'required|email|max:254',
+            'message' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $data = $this->stockService->getDetail($request->audit_id);
+            
+            $header = $data['header'];
+            if ($header['status'] !== 'Submitted') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dokumen belum selesai.'
+                ], 400);
+            }
+
+            // Generate PDF
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('stock.pdf-report', $data);
+            $pdf->render();
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                530, 815, "{PAGE_NUM} / {PAGE_COUNT}", null, 8, [0.27, 0.27, 0.27]
+            );
+
+            $pdfData = $pdf->output();
+            $fileName = 'stok_opname_' . $header['document_id'] . '.pdf';
+            $reportName = 'Laporan Stok Opname - ' . $header['document_id'];
+
+            // Send Email
+            \Illuminate\Support\Facades\Mail::to($request->recipient)->send(
+                new \App\Mail\ReportMail($pdfData, $fileName, $reportName, $request->message)
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email berhasil dikirim.'
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Resource tidak ditemukan.'
+            ], 404);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email gagal dikirim: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

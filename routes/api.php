@@ -47,6 +47,7 @@ Route::prefix('audits')->group(function () {
     Route::post('/delete-photo', [\App\Http\Controllers\AuditReportController::class, 'deletePhoto']);
     Route::post('/submit', [\App\Http\Controllers\AuditReportController::class, 'submit']);
     Route::post('/delete', [\App\Http\Controllers\AuditReportController::class, 'destroy']);
+    Route::post('/send-email', [\App\Http\Controllers\AuditReportController::class, 'sendEmail']);
 });
 
 //API STOCK OPNAME
@@ -85,4 +86,5 @@ Route::prefix('stock/opname')->group(function () {
     Route::post('/update-photo', [\App\Http\Controllers\StockReportController::class, 'updatePhoto']);
     Route::post('/delete-photo', [\App\Http\Controllers\StockReportController::class, 'deletePhoto']);
     Route::post('/submit', [\App\Http\Controllers\StockReportController::class, 'submit']);
+    Route::post('/send-email', [\App\Http\Controllers\StockReportController::class, 'sendEmail']);
 });

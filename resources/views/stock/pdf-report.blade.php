@@ -9,8 +9,8 @@ if (!function_exists('fmtStatus')) {
     }
 }
 
-if (!function_exists('getBase64Image')) {
-    function getBase64Image($url) {
+if (!function_exists('getLocalImagePath')) {
+    function getLocalImagePath($url) {
         if (empty($url)) return null;
 
         try {
@@ -28,9 +28,7 @@ if (!function_exists('getBase64Image')) {
             $path = public_path(ltrim($relativePath, '/'));
 
             if (file_exists($path)) {
-                $type = pathinfo($path, PATHINFO_EXTENSION);
-                $data = file_get_contents($path);
-                return 'data:image/' . $type . ';base64,' . base64_encode($data);
+                return $path;
             }
         } catch (\Exception $e) {
             // Fallback
@@ -445,7 +443,7 @@ foreach ($categories as $category) {
             <td class="signature-photo-cell">
                 <div class="sig-title">Foto Verifikasi</div>
                 @if(!empty($header['verification_photo']))
-                <img src="{{ getBase64Image($header['verification_photo']) }}" class="verification-photo" alt="Foto verifikasi stok opname">
+                <img src="{{ getLocalImagePath($header['verification_photo']) }}" class="verification-photo" alt="Foto verifikasi stok opname">
                 @else
                 <div class="verification-photo-empty">Tidak ada foto</div>
                 @endif
@@ -504,7 +502,7 @@ foreach ($categories as $category) {
                     <tr>
                         @foreach($row as $photo)
                         <td class="photo-gallery-td">
-                            <img src="{{ getBase64Image($photo['photo_path']) }}" class="gallery-photo">
+                            <img src="{{ getLocalImagePath($photo['photo_path']) }}" class="gallery-photo">
                         </td>
                         @endforeach
 
@@ -527,7 +525,7 @@ foreach ($categories as $category) {
                             <table class="annotated-inner-table">
                                 <tr>
                                     <td class="annotated-photo-td">
-                                        <img src="{{ getBase64Image($photo['photo_path']) }}" class="annotated-photo">
+                                        <img src="{{ getLocalImagePath($photo['photo_path']) }}" class="annotated-photo">
                                     </td>
                                     <td class="annotated-notes-td">
                                         @if(trim($photo['remark'] ?? '') !== '')

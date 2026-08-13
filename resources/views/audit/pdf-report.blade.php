@@ -8,36 +8,36 @@ default => "Dalam Proses",
 }
 
 /**
-* Helper to convert images to Base64 for guaranteed visibility in DomPDF
+* Helper to get local absolute path for guaranteed visibility in DomPDF without Base64 overhead
 */
-function getBase64Image($url) {
-if (empty($url)) return null;
-
-try {
-// Find relative path by stripping host info
-$cleanUrl = explode('?', $url)[0];
-$hosts = [request()->getSchemeAndHttpHost(), url('/'), 'http://localhost'];
-
-$relativePath = $cleanUrl;
-foreach ($hosts as $host) {
-if (str_contains($cleanUrl, $host)) {
-$relativePath = str_replace($host, '', $cleanUrl);
-break;
-}
-}
-
-$path = public_path(ltrim($relativePath, '/'));
-
-if (file_exists($path)) {
-$type = pathinfo($path, PATHINFO_EXTENSION);
-$data = file_get_contents($path);
-return 'data:image/' . $type . ';base64,' . base64_encode($data);
-}
-} catch (\Exception $e) {
-// Fallback to original URL if anything fails
-}
-
-return $url;
+if (!function_exists('getLocalImagePath')) {
+    function getLocalImagePath($url) {
+        if (empty($url)) return null;
+        
+        try {
+            // Find relative path by stripping host info
+            $cleanUrl = explode('?', $url)[0];
+            $hosts = [request()->getSchemeAndHttpHost(), url('/'), 'http://localhost'];
+            
+            $relativePath = $cleanUrl;
+            foreach ($hosts as $host) {
+                if (str_contains($cleanUrl, $host)) {
+                    $relativePath = str_replace($host, '', $cleanUrl);
+                    break;
+                }
+            }
+            
+            $path = public_path(ltrim($relativePath, '/'));
+            
+            if (file_exists($path)) {
+                return $path;
+            }
+        } catch (\Exception $e) {
+            // Fallback to original URL if anything fails
+        }
+        
+        return $url;
+    }
 }
 
 // Sort categories alphabetically
@@ -496,7 +496,7 @@ break 2;
             <td class="signature-photo-cell">
                 <div class="sig-title">Foto Verifikasi</div>
                 @if(!empty($audit['verification_photo']))
-                <img src="{{ getBase64Image($audit['verification_photo']) }}" class="verification-photo" alt="Foto verifikasi audit">
+                <img src="{{ getLocalImagePath($audit['verification_photo']) }}" class="verification-photo" alt="Foto verifikasi audit">
                 @else
                 <div class="verification-photo-empty">Tidak ada foto</div>
                 @endif
@@ -555,7 +555,7 @@ break 2;
                     <tr>
                         @foreach($row as $photo)
                         <td class="photo-gallery-td">
-                            <img src="{{ getBase64Image($photo['photo_path']) }}" class="gallery-photo">
+                            <img src="{{ getLocalImagePath($photo['photo_path']) }}" class="gallery-photo">
                         </td>
                         @endforeach
 
@@ -578,7 +578,7 @@ break 2;
                             <table class="annotated-inner-table">
                                 <tr>
                                     <td class="annotated-photo-td">
-                                        <img src="{{ getBase64Image($photo['photo_path']) }}" class="annotated-photo">
+                                        <img src="{{ getLocalImagePath($photo['photo_path']) }}" class="annotated-photo">
                                     </td>
                                     <td class="annotated-notes-td">
                                         @if(trim($photo['remark'] ?? '') !== '')

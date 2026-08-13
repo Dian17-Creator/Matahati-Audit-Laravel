@@ -30,7 +30,7 @@ if (!function_exists('getLocalImagePath')) {
             $path = public_path(ltrim($relativePath, '/'));
             
             if (file_exists($path)) {
-                return $path;
+                return str_replace('\\', '/', $path);
             }
         } catch (\Exception $e) {
             // Fallback to original URL if anything fails

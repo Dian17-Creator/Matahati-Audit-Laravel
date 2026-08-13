@@ -35,18 +35,8 @@ class ReportMail extends Mailable
      */
     public function build()
     {
-        $body = "";
-        
-        if (!empty($this->messageText)) {
-            $body .= $this->messageText . "\n\n";
-        }
-        
-        $body .= "Terlampir {$this->reportName}.\n\n" .
-                 "Terima kasih.\n\n" .
-                 "Email ini dikirim melalui Sistem Audit Matahati. Mohon tidak membalas email ini.";
-
         return $this->subject($this->reportName)
-                    ->html(nl2br(htmlspecialchars($body)))
+                    ->view('emails.report-mail')
                     ->attachData($this->pdfData, $this->fileName, [
                         'mime' => 'application/pdf',
                     ]);

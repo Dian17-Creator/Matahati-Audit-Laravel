@@ -86,6 +86,9 @@ class AuditReportController extends Controller
      */
     public function exportPdf(int $id)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
         try {
             $data = $this->auditService->getDetail($id);
             $pdf = Pdf::loadView('audit.pdf-report', $data);
@@ -356,6 +359,9 @@ class AuditReportController extends Controller
         ]);
 
         try {
+            ini_set('memory_limit', '512M');
+            set_time_limit(300);
+
             $data = $this->auditService->getDetail($request->audit_id);
             
             $audit = $data['audit'];

@@ -147,6 +147,9 @@ class StockReportController extends Controller
      */
     public function exportPdf(int $id)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
+
         try {
             $data = $this->stockService->getDetail($id);
 
@@ -374,6 +377,9 @@ class StockReportController extends Controller
         ]);
 
         try {
+            ini_set('memory_limit', '512M');
+            set_time_limit(300);
+
             $data = $this->stockService->getDetail($request->audit_id);
             
             $header = $data['header'];

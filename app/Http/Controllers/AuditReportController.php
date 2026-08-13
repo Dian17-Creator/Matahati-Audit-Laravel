@@ -343,4 +343,55 @@ class AuditReportController extends Controller
             ], 400);
         }
     }
+
+    /**
+     * Send email with PDF report
+     */
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'audit_id' => 'required|integer',
+            'recipient' => 'required|email|max:254',
+            'message' => 'nullable|string|max:1000',
+        ]);
+
+        try {
+            $data = $this->auditService->getDetail($request->audit_id);
+            
+            $audit = $data['audit'];
+            if ($audit['status'] !== 'Submitted') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Dokumen belum selesai.'
+                ], 400);
+            }
+
+            // Generate PDF
+            $pdf = Pdf::loadView('audit.pdf-report', $data);
+            $pdf->render();
+            $canvas = $pdf->getDomPDF()->getCanvas();
+            $canvas->page_text(
+                530, 815, "{PAGE_NUM} / {PAGE_COUNT}", null, 8, [0.27, 0.27, 0.27]
+            );
+
+            $pdfData = $pdf->output();
+            $fileName = 'audit_' . $audit['document_id'] . '.pdf';
+            $reportName = 'Laporan Audit - ' . $audit['document_id'];
+
+            // Send Email
+            \Illuminate\Support\Facades\Mail::to($request->recipient)->send(
+                new \App\Mail\ReportMail($pdfData, $fileName, $reportName, $request->message)
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Email berhasil dikirim.'
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email gagal dikirim: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

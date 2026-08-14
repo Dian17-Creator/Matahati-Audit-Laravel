@@ -171,7 +171,7 @@ class AuditReportService
             $deptName = preg_replace("/[^a-z0-9]+/", "_", $deptName);
             $deptName = trim($deptName, "_");
 
-            $docPrefix = $deptName . "_" . date("Ymd");
+            $docPrefix = "audit_" . $deptName . "_" . date("Ymd");
             $sequence = MauditAudit::where('cdocid', 'LIKE', $docPrefix . '_%')->count() + 1;
             $cdocid = sprintf("%s_%03d", $docPrefix, $sequence);
 

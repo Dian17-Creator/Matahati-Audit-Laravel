@@ -179,7 +179,7 @@ class AuditReportController extends Controller
             }
 
             $absolutePath = $uploadDir . '/' . $filename;
-            $relativePath = 'uploads/' . $cdocid . '/' . $filename;
+            $relativePath = $cdocid . '/' . $filename;
 
             // Pindahkan file photo asli. (Jika perlu di resize, gunakan ImageUploadService)
             // Sistem lama menggunakan move_uploaded_file tanpa resize untuk verification.
@@ -234,7 +234,7 @@ class AuditReportController extends Controller
 
                 $filename = $audit->cdocid . '_' . $question->nid_kat . '_' . $question->nid . '_' . $nextSequence . '.jpg';
                 $absolutePath = $uploadDir . '/' . $filename;
-                $relativePath = 'uploads/' . $audit->cdocid . '/' . $filename;
+                $relativePath = $audit->cdocid . '/' . $filename;
 
                 // Menggunakan ImageUploadService (resize, fix exif, compress)
                 $this->imageService->optimizeAndSave(
@@ -257,7 +257,7 @@ class AuditReportController extends Controller
                     'message' => 'Upload berhasil.',
                     'data' => [
                         'id' => $photo->nid,
-                        'photo_path' => asset($relativePath)
+                        'photo_path' => asset('uploads/' . $relativePath)
                     ]
                 ]);
             });
@@ -307,7 +307,11 @@ class AuditReportController extends Controller
                     throw new Exception("Audit telah di-submit, foto tidak bisa dihapus.");
                 }
 
-                $absolutePath = public_path($photo->cphoto_path);
+                $path = $photo->cphoto_path;
+                if (!str_starts_with($path, 'uploads/')) {
+                    $path = 'uploads/' . ltrim($path, '/');
+                }
+                $absolutePath = public_path($path);
                 if (File::exists($absolutePath)) {
                     File::delete($absolutePath);
                 }

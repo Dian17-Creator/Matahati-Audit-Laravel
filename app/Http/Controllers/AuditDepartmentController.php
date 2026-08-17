@@ -100,7 +100,7 @@ class AuditDepartmentController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'department_id'  => 'required|exists:mdepartment,nid',
-            'question_ids'   => 'required|array',
+            'question_ids'   => 'nullable|array',
             'question_ids.*' => 'exists:maudit_quest,nid',
         ]);
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\MauditKat;
+use App\Models\MauditQuest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
@@ -124,7 +126,7 @@ class AuditCategoryController extends Controller
             'id' => $id,
         ]);
 
-        $category = MauditKat::withCount('questions')->find($id);
+        $category = MauditKat::find($id);
 
         if (!$category) {
             return response()->json([
@@ -133,19 +135,56 @@ class AuditCategoryController extends Controller
             ], 404);
         }
 
-        if ($category->questions_count > 0) {
+        // Cek apakah ada pertanyaan dalam kategori ini yang sudah
+        // digunakan dalam transaksi audit (maudit_responses)
+        $usedInResponses = DB::table('maudit_quest')
+            ->join('maudit_responses', 'maudit_responses.nid_quest', '=', 'maudit_quest.nid')
+            ->where('maudit_quest.nid_kat', $id)
+            ->exists();
+
+        if ($usedInResponses) {
             return response()->json([
                 'success' => false,
-                'message' => 'Kategori masih memiliki pertanyaan dan tidak dapat dihapus.'
-            ], 400);
+                'message' => 'Kategori tidak dapat dihapus karena satu atau lebih pertanyaan sudah digunakan dalam proses audit.'
+            ], 409);
         }
 
-        $category->delete();
+        // Cek apakah ada pertanyaan yang sudah di-mapping ke department
+        $usedInDept = DB::table('maudit_quest')
+            ->join('maudit_deptquest', 'maudit_deptquest.nid_quest', '=', 'maudit_quest.nid')
+            ->where('maudit_quest.nid_kat', $id)
+            ->exists();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Kategori berhasil dihapus.'
-        ]);
+        if ($usedInDept) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Kategori tidak dapat dihapus karena satu atau lebih pertanyaan sudah di-mapping ke department.'
+            ], 409);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Hapus semua pertanyaan dalam kategori ini terlebih dahulu
+            MauditQuest::where('nid_kat', $id)->delete();
+
+            // Hapus kategorinya
+            $category->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Kategori berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal menghapus kategori audit: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus kategori.',
+            ], 500);
+        }
     }
 
     /**

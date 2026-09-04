@@ -10,6 +10,9 @@ use App\Http\Controllers\StockDepartmentController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
+// Google Drive Auth
+Route::get('/google-drive-auth', [\App\Http\Controllers\GoogleDriveAuthController::class, 'authenticate']);
+
 //dashboard controller
 Route::get('/dashboard/summary', [DashboardController::class, 'summary']);
 

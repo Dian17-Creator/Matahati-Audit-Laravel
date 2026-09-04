@@ -388,14 +388,36 @@ class AuditReportController extends Controller
             $fileName = 'audit_' . $audit['document_id'] . '.pdf';
             $reportName = 'Laporan Audit - ' . $audit['document_id'];
 
+            // Simpan PDF sementara untuk di-upload
+            $tempPath = storage_path('app/temp_' . $fileName);
+            file_put_contents($tempPath, $pdfData);
+
+            // Upload ke Google Drive
+            try {
+                $googleDrive = new \App\Services\GoogleDriveService();
+                $driveFile = $googleDrive->uploadFile($tempPath, $fileName);
+                $driveLink = $driveFile['webViewLink'];
+                
+                // Tambahkan link ke pesan email
+                $emailMessage = $request->message . "\n\nLink Download Google Drive: " . $driveLink;
+            } catch (\Exception $e) {
+                // Jika gagal upload ke Drive, tetap kirim email tanpa link
+                $emailMessage = $request->message;
+                \Illuminate\Support\Facades\Log::error('Google Drive Upload Error: ' . $e->getMessage());
+            }
+
+            // Hapus file sementara
+            @unlink($tempPath);
+
             // Send Email
             \Illuminate\Support\Facades\Mail::to($request->recipient)->send(
-                new \App\Mail\ReportMail($pdfData, $fileName, $reportName, $request->message)
+                new \App\Mail\ReportMail($pdfData, $fileName, $reportName, $emailMessage)
             );
 
             return response()->json([
                 'success' => true,
-                'message' => 'Email berhasil dikirim.'
+                'message' => isset($driveLink) ? 'Email berhasil dikirim dan diunggah ke Google Drive.' : 'Email berhasil dikirim (tanpa Google Drive).',
+                'drive_link' => $driveLink ?? null
             ]);
         } catch (Exception $e) {
             return response()->json([
